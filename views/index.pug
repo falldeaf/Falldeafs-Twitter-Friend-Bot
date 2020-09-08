@@ -1,0 +1,177 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<link rel="icon" type="image/png" href="favicon.png"> 
+	title= title
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/darkly/bootstrap.min.css" integrity="sha384-nNK9n28pDUDDgIiIqZ/MiyO3F4/9vsMtReZK39klb/MtkZI3/LtjSjlmyVPS3KdN" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+</head>
+
+<body>
+	<div class="container">
+	<div class="py-5 text-center">
+		img(src="bot.svg", width="150px")
+		h2
+			i(class='fa fa-twitter')
+			span= " Twitter Friends Bot"
+
+		if(current_config == "")
+			p= "[N/A]"
+			<button id="stop_button" type="button" class="btn btn-lg btn-secondary action_stop disabled mr-1">
+				i(class='fa fa-stop-circle')
+			</button>
+		else
+			p(class="text-muted")= "[" + current_config + "] config is Active. Next run will be at "
+				span(id='next_run', cron_string=current_cron)
+			<button id="stop_button" type="button" class="btn btn-lg btn-danger action_stop mr-1" data-toggle='modal' data-target='#modal-confirm'>
+				i(class='fa fa-stop-circle')
+			</button>
+		<button id="config-new-button" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#config-modal">New Config</button>
+	</div>
+
+	table(class="table table-bordered")
+		thead
+			tr
+				th(scope="col")
+					i(class='fa fa-cog')
+				th(scope=" col")
+					i(class='fa fa-id-card')
+					span= " Name"
+				th(scope="col")
+					i(class='fa fa-calendar')
+					span= " Cron"
+				th(scope="col")
+					i(class='fa fa-search')
+					span= " Search String"
+				th(scope="col")
+					i(class='fa fa-bolt')
+					span= " Actions"
+				th(scope="col")
+					i(class='fa fa-flag-checkered')
+					span= " Runs"
+				th(scope="col")
+					i(class='fa fa-users')
+					span= " Follows"
+		tbody
+			each val, index in configs
+				tr(class= val.name === current_config ? "table-success" : "")
+					th= index+1
+					td= val.name
+					td= val.cron_string
+					td= val.search_string
+					td
+						button(uid=val.name, type='button', class='btn btn-primary btn-lg action_view mr-1', id='view', data-toggle='modal', data-target="#config-modal") 
+							i(class='fa fa-eye')
+						button(uid=val.name, class='btn btn-primary btn-lg action_edit mr-1', id='edit', data-toggle='modal', data-target="#config-modal") 
+							i(class='fa fa-pencil')
+						button(uid=val.name, class='btn btn-primary btn-lg action_del mr-1', id='del', data-toggle='modal', data-target="#modal-confirm") 
+							i(class='fa fa-trash')
+						if(val.name === current_config)
+							button(uid=val.name, class='btn btn-danger btn-lg action_stop mr-1', id='stop', data-toggle='modal', data-target="#modal-confirm")
+								i(class='fa fa-stop-circle')
+						else
+							button(uid=val.name, class='btn btn-success btn-lg action_set mr-1', id='set', data-toggle='modal', data-target="#modal-confirm")
+								i(class='fa fa-play-circle')
+					td= (val.runs ? val.runs : "*")
+					td= (val.follows ? val.follows : "*")
+	</div>
+
+	<div class="modal fade" id="config-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="config-modal-title">Modal title</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<span id="config-modal-body">
+				<form method="post" id="config-form">
+					<div class="form-group">
+						<label for="namefield">Name</label>
+						<input type="text" class="form-control" name="name" placeholder="name">
+						<small id="namehelp" class="form-text text-muted">No whitespace, alphanumeric only</small>
+					</div>
+					<div class="form-group">
+						<label for="mprfield">Max Per Run</label>
+						<input type="text" class="form-control" name="max_per_run" placeholder="1">
+					</div>
+					<div class="form-group">
+						<label for="wrmbsfield">Wait Random Minutes Before Run</label>
+						<input type="text" class="form-control" name="wait_random_minutes_before_start" placeholder="0">
+					</div>
+					<div class="form-group">
+						<label for="cronfield">Cron String</label>
+						<div class="input-group mb-3">
+							<input type="text" class="form-control is-valid" name="cron_string">
+							<div class="input-group-prepend">
+								<span class="input-group-text" name="basic-addon3" id="cron-description"></span>
+							</div>
+						</div>
+						<small id="cronhelp" class="form-text text-muted">1.)min  2.)hour  3.)day(mon)  4.)mon  5.)day(week) <a target="_blank" href="https://crontab.guru/">help</a> </small>
+					</div>
+					<div class="form-group">
+						<label for="frfield">Follow Ratio</label>
+						<input type="text" class="form-control" name="follow_ratio" placeholder="0.8">
+						<small id="frhelp" class="form-text text-muted">Friends ÷ Followers</small>
+					</div>
+					<div class="form-group">
+						<label for="ssfield">Search String</label>
+						<div class="input-group mb-3">
+							<input type="text" class="form-control" name="search_string" placeholder="#indiedev">
+							<div class="input-group-append">
+								<button id="test-twitter-search" class="btn btn-outline-secondary" type="button">Test Search</button>
+							</div>
+						</div>
+					</div>
+					<div class="form-check">
+						<input type="checkbox" class="form-check-input" name="bot_check">
+						<label class="form-check-label" for="bcfield">Bot Check</label>
+					</div>
+
+				</form>
+			</span>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			<button id="config-save" type="button" class="btn btn-primary">Save changes</button>
+		</div>
+		</div>
+	</div>
+	</div>
+
+	<div class="modal fade" id="modal-confirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+		<div class="modal-header">
+			<h5 class="modal-title" id="modal-confirm-title">Modal title</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		<div class="modal-body">
+			<span id="modal-confirm-body">stuff here</span>
+		</div>
+		<div id="modal-footer-confirm" class="modal-footer"></div>
+		</div>
+	</div>
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js" integrity="sha512-rmZcZsyhe0/MAjquhTgiUcb4d9knaFc7b5xAfju483gbEXTkeJRUMIPk6s3ySZMYUHEcjKbjLjyddGWMrNEvZg==" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/later/1.2.0/later.min.js" integrity="sha512-4OyNDMl5KLKjS8F1ImVwUvmthM8HkXbR6vMafCmT5zBTd9I/sA3z3zM0JLBosHW6/3K2jq2RoBo/eTUNS2hOGA==" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prettycron/0.11.0/prettycron.min.js" async></script>
+	<script src="https://unpkg.com/cronstrue@latest/dist/cronstrue.min.js" async></script>
+
+	<script src="frontend.js"></script>
+</body>
+</html>
