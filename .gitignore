@@ -3,6 +3,7 @@ build
 npm-debug.log
 .env
 .DS_Store
+deploy.bat
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml

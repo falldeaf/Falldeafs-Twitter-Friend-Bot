@@ -1,0 +1,7 @@
+{
+	"uid": "TwitterBot",
+	"append": true,
+	"watch": true,
+	"script": "index.js",
+	"sourceDir": "/volume1/Server/TwitterBot"
+}

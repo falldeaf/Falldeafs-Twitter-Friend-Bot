@@ -3,6 +3,7 @@
 const cron = require('node-cron');
 const database = require('./database');
 const tasks = require('./tasks');
+const delay = require('delay');
 
 global.status = {
 	running: false,
