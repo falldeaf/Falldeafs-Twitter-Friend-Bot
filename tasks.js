@@ -35,7 +35,7 @@ module.exports = {
 
 	},
 
-	followTask: async function(search, ratio, viable_users_count, max_attempts){
+	followTask: async function(search, ratio, viable_users_count, max_attempts, grace){
 		try{
 
 			//default ratios
@@ -102,7 +102,7 @@ module.exports = {
 				//TODO: Check if follow worked before updating DB
 				await twitter.followUser(user);
 
-				await database.followedNew({name: user, config_name: config_name});
+				await database.followedNew({name: user, config_name: config_name, grace: grace});
 			}
 
 			//return viable_users_array;

@@ -44,7 +44,7 @@ async function setConfig(name) {
 		console.log(`Waiting ${random} minutes before launch`);
 		if(random > 0) await delay(random*60000);//Wait up to 30 minutes before starting
 
-		tasks.followTask(config.search_string, config.follow_ratio, config.max_per_run, 6);
+		tasks.followTask(config.search_string, config.follow_ratio, config.max_per_run, 6, config.grace);
 	});
 
 }

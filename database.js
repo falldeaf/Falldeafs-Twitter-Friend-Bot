@@ -108,10 +108,14 @@ module.exports = {
 	},
 
 	//Followed a new user, add their name to the DB
+	//arguments: user [object] contains:
+	//    -name [string] (a twitter user handle minus @)
+	//    -config_name [string] (configuration profile name that created this follow)
+	//    -grace [int] (the grace period to allow before followback must occur, in days)
 	followedNew: async function(user) {
 		var today = new Date();
 		var tomorrow = new Date();
-		tomorrow.setDate(today.getDate()+4);
+		tomorrow.setDate(today.getDate()+user.grace);
 
 		try {
 			const client = await MongoClient.connect(uri, mongoops).catch(err => { console.log(err); });
