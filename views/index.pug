@@ -9,7 +9,8 @@
 	<link rel="icon" type="image/png" href="favicon.png"> 
 	title= title
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.2/darkly/bootstrap.min.css" integrity="sha384-nNK9n28pDUDDgIiIqZ/MiyO3F4/9vsMtReZK39klb/MtkZI3/LtjSjlmyVPS3KdN" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
 </head>
 
 <body>
@@ -34,7 +35,7 @@
 		<button id="config-new-button" type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#config-modal">New Config</button>
 	</div>
 
-	table(class="table table-bordered")
+	table(class="table")
 		thead
 			tr
 				th(scope="col")
@@ -43,7 +44,7 @@
 					i(class='fa fa-id-card')
 					span= " Name"
 				th(scope="col")
-					i(class='fa fa-calendar')
+					i(class='fa fa-calendar-alt')
 					span= " Cron"
 				th(scope="col")
 					i(class='fa fa-search')
@@ -57,6 +58,9 @@
 				th(scope="col")
 					i(class='fa fa-users')
 					span= " Follows"
+				th(scope="col")
+					i(class='fas fa-users-slash')
+					span= " Unfollows"
 		tbody
 			each val, index in configs
 				tr(class= val.name === current_config ? "table-success" : "")
@@ -68,9 +72,9 @@
 						button(uid=val.name, type='button', class='btn btn-primary btn-lg action_view mr-1', id='view', data-toggle='modal', data-target="#config-modal") 
 							i(class='fa fa-eye')
 						button(uid=val.name, class='btn btn-primary btn-lg action_edit mr-1', id='edit', data-toggle='modal', data-target="#config-modal") 
-							i(class='fa fa-pencil')
+							i(class='fa fa-sliders-h')
 						button(uid=val.name, class='btn btn-primary btn-lg action_del mr-1', id='del', data-toggle='modal', data-target="#modal-confirm") 
-							i(class='fa fa-trash')
+							i(class='fa fa-trash-alt')
 						if(val.name === current_config)
 							button(uid=val.name, class='btn btn-danger btn-lg action_stop mr-1', id='stop', data-toggle='modal', data-target="#modal-confirm")
 								i(class='fa fa-stop-circle')
@@ -79,6 +83,7 @@
 								i(class='fa fa-play-circle')
 					td= (val.runs ? val.runs : "*")
 					td= (val.follows ? val.follows : "*")
+					td= (val.unfollows ? val.unfollows : "*")
 	</div>
 
 	<div class="modal fade" id="config-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
