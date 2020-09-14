@@ -49,10 +49,11 @@ async function setConfig(name) {
 
 }
 
-//Every day at 2am, run the cleanup routine to check for twitter users that didn't follow back after the time limit
-cron.schedule("0 2 * * *", async () => {
+//Every day at third hour at the 30 min mark, run the cleanup routine to check for twitter users that didn't follow back after the time limit
+cron.schedule("30 */3 * * *", async () => {
 	tasks.unfollowTask();
 });
 
 //tasks.followTask("#indiedev", 0.5, 5, 6);
 //tasks.unfollowTask();
+database.getFollowersForConfigs();

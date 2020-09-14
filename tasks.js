@@ -28,11 +28,8 @@ module.exports = {
 			}
 		}
 
-		//TODO Update current user total followers
-		if(global.status.current_config !== null) {
-			global.status.current_config.followers_count = await database.getFollowersForConfig();
-		}
-
+		//Update stats for each config
+		await database.getFollowersForConfig();
 	},
 
 	followTask: async function(search, ratio, viable_users_count, max_attempts, grace){

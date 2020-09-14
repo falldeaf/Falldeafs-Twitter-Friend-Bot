@@ -179,11 +179,12 @@ module.exports = {
 
 			let configs = await collection_config.find().toArray();
 			for(var config of configs) {
-				let count = await collection_users.find({config_name: config.name}).toArray();
-				
-				
+				let fcount = await collection_users.find({config_name: config.name, status: 1}).toArray();
+				let ucount = await collection_users.find({config_name: config.name, status: 2}).toArray();
+
 				var query = { name: config.name};
-				var newvalues = { $set: {follows: count.length} };
+				var newvalues = { $set: {follows: await fcount.length, unfollows: await ucount.length} };
+				console.log(`Config: ${query.name} f:${newvalues.$set.follows} u:${newvalues.$set.unfollows}`);
 				let res = await collection_config.updateOne(query, newvalues);
 			}
 
