@@ -50,9 +50,6 @@
 					i(class='fa fa-search')
 					span= " Search String"
 				th(scope="col")
-					i(class='fa fa-bolt')
-					span= " Actions"
-				th(scope="col")
 					i(class='fa fa-flag-checkered')
 					span= " Runs"
 				th(scope="col")
@@ -61,6 +58,12 @@
 				th(scope="col")
 					i(class='fas fa-users-slash')
 					span= " Unfollows"
+				th(scope="col")
+					i(class='fas fa-percentage')
+					span= " Rate"
+				th(scope="col")
+					i(class='fa fa-bolt')
+					span= " Actions"
 		tbody
 			each val, index in configs
 				tr(class= val.name === current_config ? "table-success" : "")
@@ -68,6 +71,10 @@
 					td= val.name
 					td= val.cron_string
 					td= val.search_string
+					td= (val.runs ? val.runs : "*")
+					td= (val.follows ? val.follows : "*")
+					td= (val.unfollows ? val.unfollows : "*")
+					td= (val.follows / val.unfollows * 100).toFixed(1).toString() + "%"
 					td
 						button(uid=val.name, class='btn btn-primary btn-lg action_edit mr-1', id='edit', data-toggle='modal', data-target="#config-modal") 
 							i(class='fa fa-sliders-h')
@@ -79,9 +86,6 @@
 						else
 							button(uid=val.name, class='btn btn-success btn-lg action_set mr-1', id='set', data-toggle='modal', data-target="#modal-confirm")
 								i(class='fa fa-play-circle')
-					td= (val.runs ? val.runs : "*")
-					td= (val.follows ? val.follows : "*")
-					td= (val.unfollows ? val.unfollows : "*")
 	</div>
 
 	<div class="modal fade" id="config-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

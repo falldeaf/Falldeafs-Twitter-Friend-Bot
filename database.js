@@ -136,7 +136,7 @@ module.exports = {
 	},
 
 	//Check for users that I follow, but don't follow back and have expired their wait time
-	timesUp: async function(whitelist) {
+	timesUp: async function() {
 		try {
 			const client = await MongoClient.connect(uri, mongoops).catch(err => { console.log(err); });
 			let collection = await client.db("twitdb").collection('users');
@@ -205,6 +205,35 @@ module.exports = {
 			var query = { name: config_name };
 			var newvalues = { $inc: { runs: 1 } };
 			let res = await collection.updateOne(query, newvalues);
+
+			await client.close();
+			return(res);
+		} catch (err) {
+			console.log(err);
+			return(false);
+		}
+	},
+
+	overrideGrace: async function(days) {
+		try {
+			const client = await MongoClient.connect(uri, mongoops).catch(err => { console.log(err); });
+			let collection = await client.db("twitdb").collection('users');
+
+			var current_date = new Date();
+			let res = await collection.find({status: 0}).toArray();
+
+			for(var user of res) {
+				console.log(user.name);
+				console.log(user.date_followed);
+				var new_grace = new Date();
+				new_grace.setDate(user.date_followed.getDate() + days);
+				console.log(new_grace);
+				console.log("\n");
+
+				var query = { name: user.name };
+				var newvalues = { $set: {date_expires: new_grace} };
+				let res = await collection.updateOne(query, newvalues);				
+			}
 
 			await client.close();
 			return(res);

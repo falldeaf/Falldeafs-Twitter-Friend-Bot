@@ -29,7 +29,7 @@ module.exports = {
 		}
 
 		//Update stats for each config
-		await database.getFollowersForConfig();
+		await database.getFollowersForConfigs();
 	},
 
 	followTask: async function(search, ratio, viable_users_count, max_attempts, grace){

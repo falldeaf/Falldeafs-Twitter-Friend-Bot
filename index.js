@@ -56,4 +56,6 @@ cron.schedule("30 */3 * * *", async () => {
 
 //tasks.followTask("#indiedev", 0.5, 5, 6);
 //tasks.unfollowTask();
+
+//database.overrideGrace(1);
 //database.getFollowersForConfigs();
